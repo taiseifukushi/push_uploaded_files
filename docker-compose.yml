@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  app:
+    build: .
+    volumes:
+      - .:/work
+    ports:
+      - "3001:3001"
+    tty: true
+    stdin_open: true
