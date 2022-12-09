@@ -1,6 +1,7 @@
 const { Storage } = require('@google-cloud/storage');
 import { google } from "googleapis";
 import { Readable } from "stream";
+import { readFile, writeFile } from "fs/promises";
 
 async function copyToCloudStorageAsync(fileId: string, bucketName: string, storageFileName: string, contentType: string): Promise<void> {
     const authClient = await google.auth.getClient({

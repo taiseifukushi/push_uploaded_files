@@ -35,7 +35,6 @@ docker compose exec app npx tsc --init
   - https://www.infoq.com/jp/articles/why-architectural-diagrams/
 - xxx
 
-
 ## ドキュメント
 
 - https://developers.google.com/drive/api/guides/push

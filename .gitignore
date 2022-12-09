@@ -132,4 +132,5 @@ dist
 .pnp.*
 
 tmp
-config/config.json
+config
+!config/config.json.sample
