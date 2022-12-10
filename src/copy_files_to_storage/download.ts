@@ -1,13 +1,13 @@
-import { readFile, writeFile } from "fs/promises"
+import { readFile, writeFile } from "fs/promises";
+// const { GoogleAuth } = require("google-auth-library");
+// const auth = new GoogleAuth({
+// 	scopes: "https://www.googleapis.com/auth/drive",
+// });
 
-async function searchFile() {
-	const { GoogleAuth } = require("google-auth-library");
+async function downloadFile(realFileId: string) {
+	const config = readFile("config/config.json"); 
 	const { google } = require("googleapis");
-    const config = readFile("config/config.json"); 
-	const auth = new GoogleAuth({
-		scopes: "https://www.googleapis.com/auth/drive",
-		config
-	});
+
 	const service = google.drive({ version: "v3", auth });
 	const files = [];
 	try {
@@ -22,6 +22,9 @@ async function searchFile() {
 		});
 		return res.data.files;
 	} catch (err) {
+		console.log(err);
 		throw err;
 	}
 }
+
+downloadFile()

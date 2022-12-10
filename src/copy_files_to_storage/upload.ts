@@ -15,7 +15,7 @@ async function copyToCloudStorageAsync(fileId: string, bucketName: string, stora
     const uploadFile = bucket.file(storageFileName);
 
     await new Promise<void>((resolve, reject) => {
-        const downloadStream = media.data as Readable;
+        const downloadStream = media.data ;
         const uploadStream = uploadFile.createWriteStream({
         metadata: {
             cacheControl: "no-cache",
