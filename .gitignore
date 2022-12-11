@@ -134,3 +134,4 @@ dist
 tmp
 config
 !config/config.json.sample
+!config/cloud_storage_config.json.sample

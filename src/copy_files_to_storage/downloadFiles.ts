@@ -1,6 +1,9 @@
-import { drive_v3 } from "googleapis";
+import { google, drive_v3 } from "googleapis";
 import { driveV3Service } from "./service/driveV3Auth";
 import * as fs from "fs"; 
+import { Readable } from "stream";
+import { readFile, writeFile } from "fs/promises";
+import { CreateBucketRequest, Storage } from "@google-cloud/storage";
 
 // type Files = drive_v3.Schema$File[]
 
@@ -17,6 +20,7 @@ const listInDrive = async () => {
 }
 
 const downloadFiles = async () => {
+    // const files = listInDrive();
     const fileId = "1kCokseof3kuVe5zX5Sn0Au8miwXmPn_e";
     try {
         const data = await driveV3Service.files.get({
@@ -32,5 +36,30 @@ const downloadFiles = async () => {
 };
 
 downloadFiles().catch((err) => console.error(err));
-// console.log(result);
-// console.log(typeof result);
+
+const copyToCloudStorageAsync = async (fileId: string, bucketName: string, storageFileName: string, contentType: string): Promise<void> => {
+	const media = await driveV3Service.files.get(
+		{ fileId, supportsTeamDrives: true, alt: "media" },
+		{ responseType: "stream" }
+	);
+
+	const storage = new Storage();
+	const bucket = storage.bucket(bucketName);
+	const uploadFile = bucket.file(storageFileName);
+
+	await new Promise<void>((resolve, reject) => {
+		const downloadStream = media.data;
+		const uploadStream = uploadFile.createWriteStream({
+			metadata: {
+				cacheControl: "no-cache",
+				contentType,
+			},
+		});
+		downloadStream.pipe(uploadStream);
+		downloadStream.on("error", reject);
+		uploadStream.on("error", reject);
+		uploadStream.on("finish", resolve);
+	});
+}
+
+// copyToCloudStorageAsync("aaaaaa", "bbbbbb", "cccccc", "dddddd");
