@@ -1,7 +1,7 @@
 {
 	"scripts": {
 		"build": "npx tsc",
-		"dev": "npx ts-node src/main/index.ts",
+		"start": "npx ts-node src/main/server.ts",
 		"eslint": "npx eslint ."
 	},
 	"devDependencies": {
