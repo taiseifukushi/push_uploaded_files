@@ -1,3 +1,7 @@
+// https://cloud.google.com/storage/docs/uploading-objects?hl=ja#storage-upload-object-nodejs
+// https://cloud.google.com/storage/docs/uploads-downloads?hl=ja#client-libraries
+// https://cloud.google.com/storage/docs/streaming-uploads?hl=ja#prereq-code-samples
+
 const path = require("path");
 const { google } = require("googleapis");
 const fs = require("fs");

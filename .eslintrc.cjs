@@ -6,7 +6,7 @@ module.exports = {
 		tsconfigRootDir: __dirname,
 		project: ["./tsconfig.json"],
 	},
-	ignorePatterns: ["out", "tmp"],
+	ignorePatterns: ["out", "tmp", "src/copy_files_to_storage/sample"],
 	extends: [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",

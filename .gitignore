@@ -133,6 +133,6 @@ dist
 
 tmp
 config
-!config/config.json.sample
-!config/cloud_storage_config.json.sample
+!config/credentials.json.sample
+!config/default.json.sample
 .DS_Store
