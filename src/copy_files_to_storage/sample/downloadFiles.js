@@ -18,7 +18,7 @@ const downloadFiles = async () => {
 
 	for (const file of res1.data.files) {
 		if (file["mimeType"] != "application/vnd.google-apps.folder") {
-			let dest = fs.createWriteStream(`./tmp/uploaded/${file["name"]}`);
+			let dest = fs.createWriteStream(`./tmp/upload/${file["name"]}`);
 			await drive.files.get(
 				{
 					fileId: file["id"],

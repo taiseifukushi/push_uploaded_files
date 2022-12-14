@@ -23,7 +23,7 @@ const downloadFiles = async (): Promise<void> => {
 			continue;
 		}
 		const dest = fs.createWriteStream(
-			`./tmp/uploaded/${file["name"]}`
+			`./tmp/upload/${file["name"]}`
 		);
 		await driveV3Service.files.get(
 			{

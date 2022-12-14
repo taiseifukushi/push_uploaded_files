@@ -13,7 +13,7 @@ const uploadToStorage = async (auth) => {
     const myBucket = storage.bucket(bucketName);
 	const destFileName = "sample.pdf";
     const file = myBucket.file(destFileName);
-	const content = "tmp/uploaded/sample.pdf";
+	const content = "tmp/upload/sample.pdf";
 
     const passthroughStream = new stream.PassThrough();
 	passthroughStream.write(content);
