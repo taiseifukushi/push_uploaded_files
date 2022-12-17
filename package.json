@@ -1,9 +1,8 @@
 {
 	"scripts": {
 		"build": "npx tsc",
-		"start": "npx ts-node src/main/server.ts",
 		"eslint": "npx eslint .",
-		"sample": "node src/copy_files_to_storage/sample/downloadFiles.js"
+		"start": "npx tsc-watch --onSuccess 'npx functions-framework --target=cloudEvent'"
 	},
 	"devDependencies": {
 		"@types/config": "^3.3.0",
@@ -17,6 +16,7 @@
 		"typescript": "^4.9.4"
 	},
 	"dependencies": {
+		"@google-cloud/functions-framework": "^3.1.2",
 		"@google-cloud/storage": "^6.8.0",
 		"@googleapis/storage": "^4.0.0",
 		"@types/glob": "^8.0.0",
