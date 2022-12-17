@@ -25,22 +25,23 @@ const downloadFiles = async (): Promise<void> => {
 		const dest = fs.createWriteStream(
 			`./tmp/upload/${file["name"]}`
 		);
-		await driveV3Service.files.get(
-			{
-				fileId: file["id"],
-				alt: "media",
-			},
-			{
-				responseType: "stream",
-			},
-			(r: { data: { pipe: (arg0: fs.WriteStream) => void; }; }) => {
+		if (file["id"]) {
+			// eslint-disable-next-line @typescript-eslint/await-thenable
+			await driveV3Service.files.get(
 				{
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-					r.data.pipe(dest);
-				}
+					fileId: file["id"],
+					alt: "media",
+				},
+				{
+					responseType: "stream",
+				},
+				(err, res) => {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+						res?.data.pipe(dest);
+					}
+				);
 			}
-		)
-	}
+		}
 	return;
 };
 
