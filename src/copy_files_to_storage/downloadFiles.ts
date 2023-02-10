@@ -26,8 +26,7 @@ const downloadFiles = async (): Promise<void> => {
 			`./tmp/upload/${file["name"]}`
 		);
 		if (file["id"]) {
-			// eslint-disable-next-line @typescript-eslint/await-thenable
-			await driveV3Service.files.get(
+			driveV3Service.files.get(
 				{
 					fileId: file["id"],
 					alt: "media",
@@ -36,7 +35,6 @@ const downloadFiles = async (): Promise<void> => {
 					responseType: "stream",
 				},
 				(err, res) => {
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 						res?.data.pipe(dest);
 					}
 				);
