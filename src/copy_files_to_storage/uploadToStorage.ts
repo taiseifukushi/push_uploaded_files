@@ -9,41 +9,51 @@ type Auth = {
 };
 
 const CloudStorageAuth: Auth = {
-  projectId: config.get("projectId"),
-  keyFilename: "config/credentials.json",
+	projectId: config.get("projectId"),
+	keyFilename: "config/credentials.json",
 };
 
-const filesToUpload = (): string[] | void => {
-  glob("./tmp/upload/*", (err, files) => {
-    console.log(files);
-  });
-}
-
-const uploadToStorage = (auth: Auth): void => {
-  const storage: Storage = new Storage(auth);
-  const bucketName: string = config.get("bucketName");
-  const myBucket: Bucket = storage.bucket(bucketName);
-	
-  const list = filesToUpload();
-  if (list === undefined) {
-    return;
-  }
-  for (const destFileName of list) {
-    const uploadContent = `tmp/upload/${destFileName}`;
-    const newFileName = myBucket.file(destFileName);
-	
-    const passthroughStream = new stream.PassThrough();
-    passthroughStream.write(uploadContent);
-    passthroughStream.end();
-	
-    try {
-      passthroughStream
-        .pipe(newFileName.createWriteStream());
-    } catch (err) {
-      console.error(err);
-    }
-  }
-  return;
+const filesToUpload = (): Promise<string[]> => {
+	return new Promise((resolve, reject) => {
+		glob("./tmp/*", (err, files) => {
+			if (err) {
+				reject(err);
+			} else {
+				console.log(files);
+				resolve(files);
+			}
+		});
+	});
 };
 
-uploadToStorage(CloudStorageAuth);
+const uploadToStorage = async (auth: Auth): Promise<void> => {
+	const storage: Storage = new Storage(auth);
+	const bucketName: string = config.get("bucketName");
+	const myBucket: Bucket = storage.bucket(bucketName);
+
+	const list = await filesToUpload();
+	for (const destFileName of list) {
+		const uploadContent = `tmp/upload/${destFileName}`;
+		const newFileName = myBucket.file(destFileName);
+
+		const passthroughStream = new stream.PassThrough();
+		passthroughStream.write(uploadContent);
+		passthroughStream.end();
+
+		try {
+			passthroughStream.pipe(newFileName.createWriteStream());
+		} catch (err) {
+			console.error(err);
+		}
+	}
+	return;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
+(async () => {
+	try {
+		await uploadToStorage(CloudStorageAuth);
+	} catch (err) {
+		console.error(err);
+	}
+})();

@@ -13,7 +13,7 @@ async function listFiles(): Promise<GaxiosResponse<drive_v3.Schema$FileList>>{
 }
 
 async function getFiles(fileId: string, fileName: string): Promise<void> {
-  const dest = fs.createWriteStream(`./tmp/upload/${fileName}`);
+  const dest = fs.createWriteStream(`./tmp/${fileName}`);
   return new Promise((resolve, reject) => {
     driveV3Service.files.get(
       {
@@ -36,38 +36,37 @@ async function getFiles(fileId: string, fileName: string): Promise<void> {
   });
 }
 
-async function downloadFiles(): Promise<void[] | void> {
-  const result = await listFiles();
-  const filesList = result.data.files;
-  const _array = [];
-	
-  if (filesList === undefined) {
-    return;
-  }
-  for (const file of filesList) {
-    if (file["mimeType"] != "application/vnd.google-apps.folder") {
-      continue;
-    }
-    if (file["name"] === null || file["name"] === undefined) {
-      continue;
-    }
-    if (file["id"]) {
-      _array.push(await getFiles(file["id"], file["name"]));
-    }
-  }
-  console.log(_array);
-  try {
-		return _array;
-	} catch (error) {
-		console.error(error);
+async function downloadFiles(): Promise<void[]> {
+	const result = await listFiles();
+	const filesList = result.data.files;
+	const _array: Promise<void>[] = [];
+
+	if (filesList === undefined) {
+		console.log("response is undefined or null");
+		return [];
 	}
+
+	for (const file of filesList) {
+		if (
+			file["id"] === null ||
+			file["id"] === undefined ||
+			file["name"] === null ||
+			file["name"] === undefined ||
+			file["mimeType"] === "application/vnd.google-apps.folder"
+		) {
+			console.log("name");
+			continue;
+		}
+		_array.push(getFiles(file["id"], file["name"]));
+	}
+	return Promise.all(_array);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
 	try {
-		await Promise.all(downloadFiles());
+		await downloadFiles();
 	} catch (error) {
 		console.error(error);
 	}
 })();
-
