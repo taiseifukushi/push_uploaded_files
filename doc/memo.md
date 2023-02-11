@@ -16,3 +16,8 @@ flowchart LR
     end
     id3 -->|trigger|CloudFunctions --> |Push|id7[(Github Repo)]
 ```
+
+gcloud functions deploy pushToRepo \ 
+--runtime=nodejs16 \
+--trigger-bucket=husita-h-sandbox-01-cloudstorage-01 \
+--trigger=event-google.cloud.storage.object.v1.finalized

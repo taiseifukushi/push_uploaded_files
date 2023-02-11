@@ -5,5 +5,5 @@ services:
     volumes:
       - .:/work
     ports:
-      - "3001:3001"
+      - "8080:8080"
     tty: true
