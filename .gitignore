@@ -131,7 +131,10 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-config/
-!config/*.sample
+config/*
+!config/credential.json.sample
+!config/default.json.sample
 .DS_Store
-tmp/sample.*
+tmp/*
+!tmp/.gitkeep
+.vscode

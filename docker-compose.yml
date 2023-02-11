@@ -4,8 +4,6 @@ services:
     build: .
     volumes:
       - .:/work
-    # command: npx ts-node src/main/index.ts
     ports:
-      - "3001:3001"
+      - "8080:8080"
     tty: true
-    stdin_open: true
