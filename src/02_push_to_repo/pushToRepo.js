@@ -41,7 +41,7 @@ ff.cloudEvent("pushToRepo", async (cloudEvent) => {
 
 	const bucketName = cloudEvent.data.bucket;
 	const bucketFileName = cloudEvent.data.name;
-	const destFileName = path.join(cwd, `${repositoryName}`, `${bucketFileName}.txt`);
+	const destFileName = path.join(cwd, `repositoryName`, `bucketFileName`);
 
 	await cloneGitRepository(repositoryUrl);
 	await downloadCloudStorageBucketFile(bucketName, bucketFileName, destFileName);

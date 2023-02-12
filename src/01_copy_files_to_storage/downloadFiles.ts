@@ -1,5 +1,5 @@
 import { drive_v3 } from "googleapis";
-import { driveV3Service } from "./service/driveV3Auth";
+import { driveV3Service } from "../service/driveV3Auth";
 import * as fs from "fs"; 
 import { GaxiosResponse } from "googleapis-common";
 

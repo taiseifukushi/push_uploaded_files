@@ -1,9 +1,10 @@
 {
 	"scripts": {
-		"build": "npx tsc",
-		"eslint": "npx eslint .",
-		"eslint-fix": "npx eslint . --fix",
-		"start": "npx tsc-watch --onSuccess 'npx functions-framework --target=cloudEvent'"
+		"build": "tsc",
+		"eslint": "eslint .",
+		"eslint-fix": "eslint . --fix",
+		"download_files": "ts-node src/copy_files_to_storage/downloadFiles.ts",
+		"upload_files": "ts-node src/copy_files_to_storage/uploadToStorage.ts"
 	},
 	"devDependencies": {
 		"@types/config": "^3.3.0",
