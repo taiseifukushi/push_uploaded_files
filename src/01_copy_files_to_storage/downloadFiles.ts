@@ -1,5 +1,5 @@
 import { drive_v3 } from "googleapis";
-import { driveV3Service } from "./service/driveV3Auth";
+import { driveV3Service } from "../service/driveV3Auth";
 import * as fs from "fs"; 
 import { GaxiosResponse } from "googleapis-common";
 
@@ -62,11 +62,10 @@ async function downloadFiles(): Promise<void[]> {
 	return Promise.all(_array);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-(async () => {
-	try {
-		await downloadFiles();
-	} catch (error) {
-		console.error(error);
-	}
-})();
+downloadFiles()
+	.then(() => {
+		console.log("File downloading successfully");
+	})
+	.catch((error) => {
+		console.error("Error downloading file:", error);
+});
