@@ -5,35 +5,63 @@ const path = require("path");
 const fs = require("fs");
 const cwd = path.join(__dirname, "..");
 const simpleGit = require("simple-git");
-const repositoryUrl = process.env.RepositoryUrl;
-const repositoryName = process.env.RepositoryName;
+// https://github.com/steveukx/git-js#authentication
+// const repositoryUrl = `https://${USER}:${PASS}@${REPO}`;
+const repositoryUrl = process.env.REPOSITORY_URL;
+const repositoryName = process.env.REPOSITORY_NAME;
 
 async function downloadCloudStorageBucketFile(bucketName, fileName, destFileName) {
-	const options = {
-		destination: destFileName,
-	};
-	await storage.bucket(bucketName).file(fileName).download(options);
-	console.log(`gs://${bucketName}/${fileName} downloaded to ${destFileName}.`);
+	try {
+		const options = {
+			destination: destFileName,
+		};
+		await storage.bucket(bucketName).file(fileName).download(options);
+		console.log(`gs://${bucketName}/${fileName} downloaded to ${destFileName}.`);
+	} catch (error) {
+    if (error.code === "ENOENT") {
+		console.error(`downloadCloudStorageBucketFile The directory ${path.dirname(destFileName)} does not exist.`);
+	} else {
+		console.error(
+			`downloadCloudStorageBucketFile downloading file ${fileName} from bucket: ${error}`
+		);
+	}
+	}
 }
 
-async function cloneGitRepository(repositoryUrl) {
-	await simpleGit().clone(repositoryUrl, cwd);
+async function cloneGitRepository(repositoryUrl, cloneRepoPath) {
+	try {
+		await simpleGit().clone(repositoryUrl, cloneRepoPath);
+	} catch (error) {
+		console.error("cloneGitRepository", error);
+	}
 }
 
-async function pushGitRepository(workingDirectory) {
-	const git = simpleGit(workingDirectory);
-	const branchName = new Date().toLocaleString().replace(/\/|:| /g, "");
-	const commitMessage = `update_cloud_storage-${branchName}`;
-
-	await git.checkoutLocalBranch(branchName);
-	await git.add("*").commit(commitMessage);
-	await git.addRemote("origin", repositoryUrl);
-	await git.push(["-u", "origin", branchName]);
+async function pushGitRepository() {
+	try {
+		const branchName = new Date().toLocaleString().replace(/\/|:| /g, "");
+		const commitMessage = `update_cloud_storage-${branchName}`;
+		const git = simpleGit();
+		await git.addConfig("user.name", "github-actions[bot]");
+		await git.addConfig("user.email", "github-actions[bot]@users.noreply.github.com");
+		await git.checkoutLocalBranch(branchName);
+		await git.add("*").commit(commitMessage);
+		await git.push(["origin", branchName]);
+	} catch (error) {
+		console.error("pushGitRepository", error);
+	}
 }
 
 async function deleteBucketContent(bucketName, fileName) {
-	await storage.bucket(bucketName).file(fileName).delete();
-	console.log(`gs://${bucketName}/${fileName} deleted`);
+	try {
+		await storage.bucket(bucketName).file(fileName).delete();
+		console.log(`gs://${bucketName}/${fileName} deleted`);
+	} catch (error) {
+		console.error("deleteBucketContent", error);
+	}
+}
+
+function modifyFileName(fileName) {
+	return fileName.replace(/tmp/g, "doc");
 }
 
 ff.cloudEvent("pushToRepo", async (cloudEvent) => {
@@ -41,10 +69,17 @@ ff.cloudEvent("pushToRepo", async (cloudEvent) => {
 
 	const bucketName = cloudEvent.data.bucket;
 	const bucketFileName = cloudEvent.data.name;
-	const destFileName = path.join(cwd, `repositoryName`, `bucketFileName`);
+	const tmpDir = `tmp`;
 
-	await cloneGitRepository(repositoryUrl);
-	await downloadCloudStorageBucketFile(bucketName, bucketFileName, destFileName);
-	await pushGitRepository(repositoryName);
+	fs.mkdirSync(tmpDir, { recursive: true });
+	await cloneGitRepository(repositoryUrl, tmpDir);
+
+	process.chdir(tmpDir);
+	await downloadCloudStorageBucketFile(
+		bucketName,
+		bucketFileName,
+		modifyFileName(bucketFileName)
+	);
+	await pushGitRepository();
 	await deleteBucketContent(bucketName, bucketFileName);
 });

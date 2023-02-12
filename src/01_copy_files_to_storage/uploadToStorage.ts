@@ -17,7 +17,6 @@ function listUploadFiles(): Promise<string[]> {
 }
 
 function modifyFileName(fileList: string[]): string[] {
-	console.log(fileList);
 	return fileList;
 }
 
@@ -40,11 +39,10 @@ async function uploadToStorage(): Promise<void> {
 	return;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-(async () => {
-	try {
-		await uploadToStorage();
-	} catch (err) {
-		console.error(err);
-	}
-})();
+uploadToStorage()
+	.then(() => {
+		console.log("File uploading successfully");
+	})
+	.catch((error) => {
+		console.error("Error uploading file:", error);
+});
