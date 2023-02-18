@@ -4,7 +4,7 @@ import * as fs from "fs";
 import { GaxiosResponse } from "googleapis-common";
 
 
-async function listFiles(): Promise<GaxiosResponse<drive_v3.Schema$FileList>>{
+export async function listFiles(): Promise<GaxiosResponse<drive_v3.Schema$FileList>>{
   const listParams: drive_v3.Params$Resource$Files$List = {
     pageSize: 10,
     fields: "nextPageToken, files(id, name)",
@@ -12,7 +12,7 @@ async function listFiles(): Promise<GaxiosResponse<drive_v3.Schema$FileList>>{
   return await driveV3Service.files.list(listParams);
 }
 
-async function getFiles(fileId: string, fileName: string): Promise<void> {
+export async function getFiles(fileId: string, fileName: string): Promise<void> {
   const dest = fs.createWriteStream(`./tmp/${fileName}`);
   return new Promise((resolve, reject) => {
     driveV3Service.files.get(
@@ -36,7 +36,7 @@ async function getFiles(fileId: string, fileName: string): Promise<void> {
   });
 }
 
-async function downloadFiles(): Promise<void[]> {
+export async function downloadFiles(): Promise<void[]> {
 	const result = await listFiles();
 	const filesList = result.data.files;
 	const _array: Promise<void>[] = [];
@@ -68,4 +68,4 @@ downloadFiles()
 	})
 	.catch((error) => {
 		console.error("Error downloading file:", error);
-});
+	});
