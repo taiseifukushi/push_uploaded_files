@@ -1,0 +1,27 @@
+name: test
+
+on: push
+
+jobs:
+  test:
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: setup Node.js
+      uses: actions/seup-node@v3 # https://docs.github.com/ja/actions/automating-builds-and-tests/building-and-testing-nodejs#example-using-yarn
+      with:
+        node-version: 18.7.0
+        cache: yarn
+    - name: Install dependencies
+      run: yarn install
+    - name: execute unit test
+      uses: ArtiomTr/jest-coverage-report-action@v2
+      with:
+        working-directory: ./
+        test-script: yarn jest
+        prnumber: ${{ steps.findPr.outputs.number }}
+        output: report-markdown
