@@ -2,7 +2,7 @@ import { CloudStorageBucket } from "../service/cloudStorageAuth";
 
 const fileName: string = process.argv[2];
 
-async function deleteFile(fileName: string): Promise<void> {
+export async function deleteFile(fileName: string): Promise<void> {
   try {
     await CloudStorageBucket.file(fileName).delete();
     console.log(`${fileName} deleted`);

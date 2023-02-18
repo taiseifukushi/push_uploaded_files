@@ -5,9 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const cwd = path.join(__dirname, "..");
 const simpleGit = require("simple-git");
-// https://github.com/steveukx/git-js#authentication
-// const repositoryUrl = `https://${USER}:${PASS}@${REPO}`;
-const repositoryUrl = process.env.REPOSITORY_URL;
+const repositoryUrl = process.env.REPOSITORY_URL; // `https://${USER}:${PASS}@${REPO}`
 const repositoryName = process.env.REPOSITORY_NAME;
 
 async function downloadCloudStorageBucketFile(bucketName, fileName, destFileName) {

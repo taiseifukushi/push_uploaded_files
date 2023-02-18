@@ -2,7 +2,7 @@ import stream from "stream";
 import glob from "glob";
 import { CloudStorageBucket } from "../service/cloudStorageAuth";
 
-function listUploadFiles(): Promise<string[]> {
+export function listUploadFiles(): Promise<string[]> {
 	return new Promise((resolve, reject) => {
 		glob("tmp/*", (err, files) => {
 			if (err) {
@@ -16,11 +16,11 @@ function listUploadFiles(): Promise<string[]> {
 	});
 }
 
-function modifyFileName(fileList: string[]): string[] {
+export function modifyFileName(fileList: string[]): string[] {
 	return fileList;
 }
 
-async function uploadToStorage(): Promise<void> {
+export async function uploadToStorage(): Promise<void> {
 	const list = await listUploadFiles();
 	for (const destFileName of list) {
 		const uploadContent = `tmp/${destFileName}`;

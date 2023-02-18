@@ -1,7 +1,7 @@
 import { drive_v3 } from "googleapis";
 import { driveV3Service } from "../service/driveV3Auth";
 import * as fs from "fs"; 
-import { GaxiosResponse } from "googleapis-common";
+import { GaxiosResponse } from "gaxios";
 
 
 export async function listFiles(): Promise<GaxiosResponse<drive_v3.Schema$FileList>>{

@@ -1,16 +1,12 @@
 import { describe } from "node:test";
 
 import * as fs from "fs";
-import {
-	listFiles,
-	getFiles,
-	downloadFiles,
-} from "../../src/01_copy_files_to_storage/downloadFiles";
+import { downloadFiles } from "../../src/01_copy_files_to_storage/downloadFiles";
 import { drive_v3 } from "googleapis";
 import { driveV3Service } from "../../src/service/driveV3Auth";
-import { GaxiosResponse } from "googleapis-common";
+import { GaxiosResponse } from "gaxios";
 
-jest.mock("../service/driveV3Auth"); // モック化する
+jest.mock("../../src/service/driveV3Auth"); // モック化する
 
 describe("downloadFiles", () => {
 	beforeEach(() => {
@@ -38,6 +34,11 @@ describe("downloadFiles", () => {
 					},
 				],
 			},
+			config: {},
+			status: 0,
+			statusText: "",
+			headers: Headers,
+			request: new XMLHttpRequest(),
 		};
 		// driveV3Service.files.list() の戻り値をモックする
 		(driveV3Service.files.list as jest.Mock).mockResolvedValueOnce(files);
