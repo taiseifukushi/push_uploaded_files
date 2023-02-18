@@ -8,21 +8,31 @@ const simpleGit = require("simple-git");
 const repositoryUrl = process.env.REPOSITORY_URL; // `https://${USER}:${PASS}@${REPO}`
 const repositoryName = process.env.REPOSITORY_NAME;
 
-async function downloadCloudStorageBucketFile(bucketName, fileName, destFileName) {
+async function downloadCloudStorageBucketFile(
+	bucketName,
+	fileName,
+	destFileName
+) {
 	try {
 		const options = {
 			destination: destFileName,
 		};
 		await storage.bucket(bucketName).file(fileName).download(options);
-		console.log(`gs://${bucketName}/${fileName} downloaded to ${destFileName}.`);
-	} catch (error) {
-    if (error.code === "ENOENT") {
-		console.error(`downloadCloudStorageBucketFile The directory ${path.dirname(destFileName)} does not exist.`);
-	} else {
-		console.error(
-			`downloadCloudStorageBucketFile downloading file ${fileName} from bucket: ${error}`
+		console.log(
+			`gs://${bucketName}/${fileName} downloaded to ${destFileName}.`
 		);
-	}
+	} catch (error) {
+		if (error.code === "ENOENT") {
+			console.error(
+				`downloadCloudStorageBucketFile The directory ${path.dirname(
+					destFileName
+				)} does not exist.`
+			);
+		} else {
+			console.error(
+				`downloadCloudStorageBucketFile downloading file ${fileName} from bucket: ${error}`
+			);
+		}
 	}
 }
 
@@ -40,7 +50,10 @@ async function pushGitRepository() {
 		const commitMessage = `update_cloud_storage-${branchName}`;
 		const git = simpleGit();
 		await git.addConfig("user.name", "github-actions[bot]");
-		await git.addConfig("user.email", "github-actions[bot]@users.noreply.github.com");
+		await git.addConfig(
+			"user.email",
+			"github-actions[bot]@users.noreply.github.com"
+		);
 		await git.checkoutLocalBranch(branchName);
 		await git.add("*").commit(commitMessage);
 		await git.push(["origin", branchName]);

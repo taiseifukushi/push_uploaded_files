@@ -6,14 +6,11 @@ module.exports = {
 		tsconfigRootDir: __dirname,
 		project: ["./tsconfig.json"],
 	},
-	ignorePatterns: [
-		"out",
-		"tmp",
-	],
+	ignorePatterns: ["out", "tmp"],
 	extends: [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
 		"plugin:@typescript-eslint/recommended-requiring-type-checking",
-		"plugin:jest/recommended"
+		"plugin:jest/recommended",
 	],
 };
