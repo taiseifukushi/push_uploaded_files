@@ -138,3 +138,5 @@ config/*
 tmp/*
 !tmp/.gitkeep
 .vscode
+
+.env

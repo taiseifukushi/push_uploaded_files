@@ -1,6 +1,11 @@
 {
 	"scripts": {
 		"build": "tsc",
+		"start:01:download": "yarn ts-node src/01_copy_files_to_storage/downloadFiles.ts",
+		"start:01:upload": "yarn ts-node src/01_copy_files_to_storage/uploadToStorage.ts",
+		"start:02": "yarn functions-framework --target=pushToRepo --source=src/02_push_to_repo/pushToRepo.js",
+		"start:02:test": "chmod +x ~/dev.sh && ./dev.sh",
+		"start:03:delete": "yarn ts-node src/03_operate_resources/deleteBucketResource.ts",
 		"lint": "yarn lint:typescript && yarn lint:javascript",
 		"lint:typescript": "eslint --ext .ts src",
 		"lint:javascript": "eslint --ext .js src",
