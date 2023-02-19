@@ -1,8 +1,11 @@
 {
 	"scripts": {
 		"build": "tsc",
-		"lint": "eslint .",
-		"lintfix": "eslint . --fix",
+		"lint": "yarn lint:typescript && yarn lint:javascript",
+		"lint:typescript": "eslint --ext .ts src",
+		"lint:javascript": "eslint --ext .js src",
+		"lint:typescript:fix": "eslint --ext .ts src --fix",
+		"lint:javascript:fix": "eslint --ext .js src --fix",
 		"download_files": "ts-node src/copy_files_to_storage/downloadFiles.ts",
 		"upload_files": "ts-node src/copy_files_to_storage/uploadToStorage.ts"
 	},

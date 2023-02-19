@@ -3,7 +3,6 @@ import { driveV3Service } from "../service/driveV3Auth";
 import * as fs from "fs"; 
 import { GaxiosResponse } from "gaxios";
 
-
 export async function listFiles(): Promise<GaxiosResponse<drive_v3.Schema$FileList>>{
   const listParams: drive_v3.Params$Resource$Files$List = {
     pageSize: 10,

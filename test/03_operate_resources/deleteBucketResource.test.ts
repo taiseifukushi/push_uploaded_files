@@ -11,16 +11,20 @@ jest.mock("../../src/service/cloudStorageAuth", () => {
 });
 
 describe("deleteFile", () => {
+	const delete_file_name = "tmp/sample.pdf";
+
 	it("should delete a file from the bucket", async () => {
-		await deleteFile("tmp/sample.pdf");
+		await deleteFile(delete_file_name);
 		expect(CloudStorageBucket.file).toHaveBeenCalledWith("tmp/sample.pdf");
-		expect(CloudStorageBucket.file().delete).toHaveBeenCalled();
+		expect(
+			CloudStorageBucket.file(delete_file_name).delete
+		).toHaveBeenCalled();
 	});
 
 	it("should handle errors when deleting the file", async () => {
-		(CloudStorageBucket.file().delete as jest.Mock).mockRejectedValue(
-			new Error("Error deleting file")
-		);
+		(
+			CloudStorageBucket.file(delete_file_name).delete as jest.Mock
+		).mockRejectedValue(new Error("Error deleting file"));
 
 		await expect(deleteFile("tmp/sample.pdf")).rejects.toThrow(
 			"Error deleting file"
