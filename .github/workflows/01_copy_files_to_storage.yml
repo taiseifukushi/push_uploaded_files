@@ -1,0 +1,36 @@
+name: 01_copy_files_to_storage
+
+on:
+  # push:
+  #   branches:
+  #     - main
+  # pull_request:
+  #   branches:
+  #     - main
+  # schedule:
+  #   - cron: "0 0 * * *"
+  workflow_dispatch:
+
+env:
+  GOOGLE_CLOUD_PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
+  PROJECT_SERVICE_ACCOUNT: ${{ secrets.PROJECT_SERVICE_ACCOUNT }}
+  PROJECT_FUNCTION_NAME: ${{ secrets.PROJECT_FUNCTION_NAME }}
+  PROJECT_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.PROJECT_WORKLOAD_IDENTITY_PROVIDER }}
+
+jobs:
+  copy_files_to_storage:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup Docker
+      run: |
+        sudo docker-compose build
+        sudo docker-compose up -d
+    - name: Run 01:download
+      run: |
+        echo 01:download
+        sudo docker-compose exec app yarn start:01:download
+    - name: Run 01:upload
+      run: |
+        echo 01:upload
+        sudo docker-compose exec app yarn start:01:upload

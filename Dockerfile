@@ -8,4 +8,4 @@ RUN yarn build
 RUN apk update \
     apk --no-cache add curl
 
-EXPOSE 3001
+EXPOSE 8080
