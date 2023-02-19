@@ -1,0 +1,40 @@
+name: 02_deploy-push_to_repo # https://github.com/marketplace/actions/cloud-functions-deploy
+
+on:
+  # pull_request:
+  #   branches:
+  #     - main
+  #   types: [closed]
+  workflow_dispatch:
+
+env:
+  GOOGLE_CLOUD_PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
+  PROJECT_SERVICE_ACCOUNT: ${{ secrets.PROJECT_SERVICE_ACCOUNT }}
+  PROJECT_FUNCTION_NAME: ${{ secrets.PROJECT_FUNCTION_NAME }}
+  PROJECT_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.PROJECT_WORKLOAD_IDENTITY_PROVIDER }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Authenticate with GCP
+      uses: google-github-actions/auth@v1
+      with:
+        workload_identity_provider: ${{ env.PROJECT_WORKLOAD_IDENTITY_PROVIDER }}
+        service_account: ${{ env.PROJECT_SERVICE_ACCOUNT }}
+    - name: Deploy Cloud Function
+      uses: google-github-actions/deploy-cloud-functions@v1
+      with:
+        name: ${{ env.PROJECT_FUNCTION_NAME }}
+        runtime: nodejs16
+        source_directory: ./src/02_push_to_repo
+        # entry_point: app
+        project_id: ${{ env.GOOGLE_CLOUD_PROJECT_ID }}
+    - name: Test deployed function
+      run: curl "${{ steps.deploy.outputs.url }}"
