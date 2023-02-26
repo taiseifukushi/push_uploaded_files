@@ -37,7 +37,7 @@ jobs:
       with:
         name: ${{ env.PROJECT_FUNCTION_NAME }}
         runtime: nodejs16
-        source_directory: ./src/02_push_to_repo
+        source_dir: ./src/02_push_to_repo
         region: ${{ env.PROJECT_FUNCTION_REGION }}
         project_id: ${{ env.GOOGLE_CLOUD_PROJECT_ID }}
         event_trigger_type: ${{ env.FUNCION_TRIGGER_TYPE }}
