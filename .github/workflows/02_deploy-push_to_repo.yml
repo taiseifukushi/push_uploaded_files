@@ -15,12 +15,12 @@ env:
   PROJECT_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.PROJECT_WORKLOAD_IDENTITY_PROVIDER }}
   NODE_ENV: "production"
   FUNCION_TRIGGER_TYPE: ${{ secrets.FUNCION_TRIGGER_TYPE }}
-  FUNCION_TRIGGER_RESOUCE: ${{ secrets.FUNCION_TRIGGER_RESOUCE }}
+  FUNCION_TRIGGER_RESOURCE: ${{ secrets.FUNCION_TRIGGER_RESOURCE }}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     permissions:
       contents: read
       id-token: write
@@ -41,6 +41,6 @@ jobs:
         region: ${{ env.PROJECT_FUNCTION_REGION }}
         project_id: ${{ env.GOOGLE_CLOUD_PROJECT_ID }}
         event_trigger_type: ${{ env.FUNCION_TRIGGER_TYPE }}
-        event_trigger_resource: ${{ env.FUNCION_TRIGGER_RESOUCE }}
+        event_trigger_resource: ${{ env.FUNCION_TRIGGER_RESOURCE }}
     - name: Test deployed function
       run: curl "${{ steps.deploy.outputs.url }}"
