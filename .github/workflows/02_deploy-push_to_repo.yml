@@ -1,10 +1,10 @@
 name: 02_deploy-push_to_repo # https://github.com/marketplace/actions/cloud-functions-deploy
 
 on:
-  # pull_request:
-  #   branches:
-  #     - main
-  #   types: [closed]
+  pull_request:
+    branches:
+      - main
+    types: [closed]
   workflow_dispatch:
 
 env:
@@ -21,7 +21,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     permissions:
       contents: read
       id-token: write
@@ -47,15 +47,3 @@ jobs:
           --entry-point=pushToRepo \
           --trigger-event-filters="type=${{ env.FUNCION_TRIGGER_TYPE }}" \
           --trigger-event-filters="bucket=${{ env.BUCKET_NAME }}"
-      # uses: google-github-actions/deploy-cloud-functions@v1
-      # with:
-      #   name: ${{ env.PROJECT_FUNCTION_NAME }}
-      #   runtime: nodejs16
-      #   source_dir: ./src/02_push_to_repo
-      #   region: ${{ env.PROJECT_FUNCTION_REGION }}
-      #   project_id: ${{ env.GOOGLE_CLOUD_PROJECT_ID }}
-      #   service_account_email: ${{ env.PROJECT_SERVICE_ACCOUNT }}
-      #   event_trigger_type: ${{ env.FUNCION_TRIGGER_TYPE }}
-      #   event_trigger_resource: ${{ env.FUNCION_TRIGGER_RESOURCE }}
-    - name: Test deployed function
-      run: curl "${{ steps.deploy.outputs.url }}"
