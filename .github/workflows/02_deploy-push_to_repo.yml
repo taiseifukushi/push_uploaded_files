@@ -40,6 +40,7 @@ jobs:
         source_dir: ./src/02_push_to_repo
         region: ${{ env.PROJECT_FUNCTION_REGION }}
         project_id: ${{ env.GOOGLE_CLOUD_PROJECT_ID }}
+        service_account_email: ${{ env.PROJECT_SERVICE_ACCOUNT }}
         event_trigger_type: ${{ env.FUNCION_TRIGGER_TYPE }}
         event_trigger_resource: ${{ env.FUNCION_TRIGGER_RESOURCE }}
     - name: Test deployed function
