@@ -11,7 +11,11 @@ env:
   GOOGLE_CLOUD_PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
   PROJECT_SERVICE_ACCOUNT: ${{ secrets.PROJECT_SERVICE_ACCOUNT }}
   PROJECT_FUNCTION_NAME: ${{ secrets.PROJECT_FUNCTION_NAME }}
+  PROJECT_FUNCTION_REGION: ${{ secrets.PROJECT_FUNCTION_REGION }}
   PROJECT_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.PROJECT_WORKLOAD_IDENTITY_PROVIDER }}
+  NODE_ENV: "production"
+  FUNCION_TRIGGER_TYPE: ${{ secrets.FUNCION_TRIGGER_TYPE }}
+  FUNCION_TRIGGER_RESOUCE: ${{ secrets.FUNCION_TRIGGER_RESOUCE }}
 
 jobs:
   deploy:
@@ -34,7 +38,9 @@ jobs:
         name: ${{ env.PROJECT_FUNCTION_NAME }}
         runtime: nodejs16
         source_directory: ./src/02_push_to_repo
-        # entry_point: app
+        region: ${{ env.PROJECT_FUNCTION_REGION }}
         project_id: ${{ env.GOOGLE_CLOUD_PROJECT_ID }}
+        event_trigger_type: ${{ env.FUNCION_TRIGGER_TYPE }}
+        event_trigger_resource: ${{ env.FUNCION_TRIGGER_RESOUCE }}
     - name: Test deployed function
       run: curl "${{ steps.deploy.outputs.url }}"
